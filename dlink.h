@@ -4,19 +4,21 @@ using namespace std;
 template <class TYPE>
 struct Node{
 	TYPE data_;
-	Node<TYPE>* next_;	
-	Node(const TYPE& data,Node<TYPE>* n = NULL){
+	Node<TYPE>* next_;
+	Node<TYPE>* prev_;	
+	Node(const TYPE& data,Node<TYPE>* n = NULL, Node<TYPE>* p=NULL){
 		data_=data;
 		next_=n;
+		prev_=p;
 	}
 };
 template <class TYPE>
-class SinglyLinked{
+class DoublyLinked{
 	Node<TYPE>* first_;
 	Node<TYPE>* last_;
 public:
 	Node<TYPE>* first() const {return first_;}
-	SinglyLinked(){
+	DoublyLinked(){
 		first_=last_=NULL;
 	}
 	//insert a node with data at start of linked list
@@ -34,7 +36,7 @@ public:
 	//prints the linked list assuming that the TYPE can
 	//be output using standard << operator
 	void print() const;
-	~SinglyLinked(){
+	~DoublyLinked(){
 
 	}
 };
@@ -42,36 +44,45 @@ public:
 many nodes are in the linked list, this function has number
 of operations regardless of size of list*/
 template <class TYPE>
-Node<TYPE>* SinglyLinked<TYPE>::insertAtFront(const TYPE& data){
+Node<TYPE>* DoublyLinked<TYPE>::insertAtFront(const TYPE& data){
 	Node<TYPE>* nn=new Node<TYPE>(data,first_);
-	if(first_==NULL){
+	if(first_){
+		first_->prev_=nn;
+	}
+	else{
 		last_=nn;
 	}
 	first_=nn;
+
 	return nn;
 }
 
 /*this function has a runtime of O(1) ...constant*/
 template <class TYPE>
-Node<TYPE>* SinglyLinked<TYPE>::insertAtBack(const TYPE& data){
-	Node<TYPE>* nn=new Node<TYPE>(data);
-	if(first_==NULL){
-		first_=last_=nn;
-	}
-	else{
+Node<TYPE>* DoublyLinked<TYPE>::insertAtBack(const TYPE& data){
+	Node<TYPE>* nn=new Node<TYPE>(data,NULL,last_);
+	//at least one node in list
+	if(last_){
 		last_->next_=nn;
 		last_=nn;
 	}
+	else{
+		first_=nn;
+		last_=nn;
+	}
+
 	return nn;
 
 }
 //remove a node at start of linked list
 template <class TYPE>
-void SinglyLinked<TYPE>::removeAtFront(){
+void DoublyLinked<TYPE>::removeAtFront(){
 	if(first_){
 		Node<TYPE>* tmp=first_;
 		if(first_ != last_){
+			//this if is true only if there are at least two nodes
 			first_=first_->next_;  //makes first_ point to second node
+			first_->prev_=NULL;
 		}
 		else{
 			//this else is true only if there is just one node
@@ -83,14 +94,11 @@ void SinglyLinked<TYPE>::removeAtFront(){
 }
 //remove a node at start of linked list
 template <class TYPE>
-void SinglyLinked<TYPE>::removeAtBack(){
+void DoublyLinked<TYPE>::removeAtBack(){
 	if(first_){
-		Node<TYPE>* curr=first_;
-		Node<TYPE>* prev=NULL;
-		while(curr->next_){
-			prev=curr;
-			curr=curr->next_;
-		}
+		Node<TYPE>* curr=last_;
+		Node<TYPE>* prev=last_->prev_;
+
 		//if prev is NULL, then there is only one node in list
 		if(prev!=NULL){
 			prev->next_=NULL;
@@ -106,7 +114,7 @@ void SinglyLinked<TYPE>::removeAtBack(){
 
 
 template <class TYPE>
-void SinglyLinked<TYPE>::print() const{
+void DoublyLinked<TYPE>::print() const{
 		Node<TYPE>* curr=first_;
 		while(curr){
 			cout << curr->data_ << endl;
@@ -114,7 +122,18 @@ void SinglyLinked<TYPE>::print() const{
 		}
 }
 
-
+template<class TYPE>
+Node<TYPE>* DoublyLinked::search(const TYPE& key){
+	Node<TYPE>* curr=first_;
+	Node<TYPE>* rc=NULL;
+	while(rc == NULL && curr){
+		if(curr->data_==key){
+			rc=curr;
+		}
+		curr=curr->next_;
+	}
+	return rc;
+}
 
 
 
