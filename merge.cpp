@@ -73,9 +73,9 @@ int main(int argc, char* argv[]){
   MergeSort(myarr,size);
   stopwatch.stop();
   cout << stopwatch.currtime() << endl;
-  for(int i=0;i<size;i++){
+/*  for(int i=0;i<size;i++){
     log <<myarr[i]<< endl;
-  }
+  }*/
   delete [] myarr;
   return 0;
 }
