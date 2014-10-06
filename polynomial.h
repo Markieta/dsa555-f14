@@ -18,7 +18,7 @@ public:
 	void changeCoefficient(const Fraction& coefficient){
 		coefficient_=coefficient;
 	}
-	const PolyNode* next() const{return next_;}
+	PolyNode* next() const{return next_;}
 };
 Polynomial operator+(const Polynomial& p1, const Polynomial& p2);
 Polynomial operator-(const Polynomial& p1, const Polynomial& p2);
